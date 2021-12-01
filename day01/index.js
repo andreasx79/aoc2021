@@ -3,14 +3,12 @@ function inputDataLinesIntegers(filename="input.txt") {
     return fs.readFileSync(filename).toString().trim().split("\n").map((x)=>parseInt(x))
 }
 
-
-
 function getSolutionPart1() {
     let input = inputDataLinesIntegers();
     let comp = input.slice();
     comp.unshift(input[0]);
 
-    let val = console.debug(input.map((val, i) => val > comp[i] ? 1 : 0).reduce((x,y) => x+y));
+    let val = input.map((val, i) => val > comp[i] ? 1 : 0).reduce((x,y) => x+y);
     
     return val;
 }
