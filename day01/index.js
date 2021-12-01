@@ -14,7 +14,6 @@ function getSolutionPart1() {
 function getSolutionPart2() {
     let input = inputDataLinesIntegers();
     let val = input.slice(0,input.length-3).map((val, i) => input.slice(i, i + 3).reduce((x,y)=>x+y) < input.slice(i + 1, i + 4).reduce((x,y)=>x+y) ? 1 : 0).reduce((x,y) => x+y);
-    console.debug(val);
     return val;
 }
 const part = process.env.part || "part1"
