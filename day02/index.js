@@ -1,7 +1,7 @@
 const { Console } = require('console');
 const fs = require('fs')
 function inputDataLinesIntegers(filename="input.txt") {
-    let input = fs.readFileSync(filename).toString().trim().split("\n").map((x)=> x);
+    let input = fs.readFileSync(filename).toString().trim().split("\n");
     
     return input;
 }
@@ -20,9 +20,7 @@ function getSolutionPart1() {
         } else {
             res[1] -= val;
         }
-        
     }
-        
         );
     return res[0] * res[1];
 }
