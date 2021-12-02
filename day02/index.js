@@ -4,18 +4,13 @@ function inputDataLinesIntegers(filename="input.txt") {
     let input = fs.readFileSync(filename).toString().trim().split("\n").map((x)=> x);
     var res = [0, 0, 0];
 
-    console.debug(input);
-
     input.forEach(x => {
         let dir = x.split(' ')[0];
         let val = parseInt(x.split(' ')[1]);
         res[dir === 'forward' ? 0 : dir === 'down' ? 1 : 2] += val;
-        console.debug(res);
     }
         
         );
-
-    console.debug(res);
     return res;
 }
 
