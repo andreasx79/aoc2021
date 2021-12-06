@@ -40,6 +40,19 @@ namespace Day04
 
             return bestResult.sum * bingonumbers[bestResult.winindex];
         }
+        public static int Part2(List<BingoBoard> boards, int[] bingonumbers) 
+        {
+            (int sum, int winindex) bestResult = (0,0);
+            
+            Parallel.ForEach(boards, board =>
+            {   
+                var boardResult = board.PlayNumbers(bingonumbers);
+                if(bestResult.winindex<boardResult.winIndex) bestResult = boardResult;
+                
+            });
+
+            return bestResult.sum * bingonumbers[bestResult.winindex];
+        }
 
         static void Main(string[] args)
         {
@@ -49,7 +62,7 @@ namespace Day04
 
 
             var part = Environment.GetEnvironmentVariable("part");
-            Console.WriteLine(Part1(boards, bingonumbers.ToArray()));
+            if(part == "Part1") Console.WriteLine(Part1(boards, bingonumbers.ToArray())); else Console.WriteLine(Part2(boards, bingonumbers.ToArray()));
         }
     } 
 }
