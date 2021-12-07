@@ -35,7 +35,7 @@ namespace Day04
             return input;
         }
 
-        static string Part1(List<Line> lines, bool ignoreDiagonals = true)
+        static string Run(List<Line> lines, bool ignoreDiagonals = true)
         {
             int overlapping = 0;
             foreach(var line in lines) 
@@ -67,18 +67,13 @@ namespace Day04
 
             return overlapping.ToString();
         }
-        static string Part2(List<Line> lines)
-        {
-            return "";
-        }
         
         static void Main(string[] args)
         {
             var input = parseInput("input.txt");
 
-            if(Environment.GetEnvironmentVariable("part") == "Part1") 
-            Console.WriteLine(Part1(input));
-            else Console.WriteLine(Part1(input, false));
+            if(Environment.GetEnvironmentVariable("part") == "Part1") Console.WriteLine(Run(input));
+            else Console.WriteLine(Run(input, false));
         }
     } 
 }
