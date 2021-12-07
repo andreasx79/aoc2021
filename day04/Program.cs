@@ -61,7 +61,7 @@ namespace Day04
             List<int> bingonumbers = input.bingonumbers;
 
 
-            var part = Environment.GetEnvironmentVariable("part");
+            var part = Environment.GetEnvironmentVariable("part1");
             if(part == "Part1") Console.WriteLine(Part1(boards, bingonumbers.ToArray())); else Console.WriteLine(Part2(boards, bingonumbers.ToArray()));
         }
     } 
