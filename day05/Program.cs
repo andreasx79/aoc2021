@@ -8,61 +8,77 @@ namespace Day04
 {
     class Program
     {
-        static (List<BingoBoard> boards, List<int> bingonumbers) parseInput(string filename) {
-            var input = System.IO.File.ReadLines(filename)
-                .ToArray();
-            
-            var bingoNumbers = Array.ConvertAll(input[0].Split(","), int.Parse);
-            List<BingoBoard> boards = new List<BingoBoard>();
-            
-            for(var i = 1; i < input.Length; i+=5)
+         
+        private record Line((int,int) start, (int,int) end);
+        private static int[,] board = new int[5,5];
+
+        private static void printBoard()
+        {
+            for(int y = 0; y<board.GetLength(1); y++)
             {
-                if(input[i].Length == 0) i++;
-                var buffer = new string[5];
-                Array.Copy(input, i, buffer, 0, 5);
-                boards.Add(new BingoBoard(buffer));
+                for(int x = 0; x<board.GetLength(0); x++)
+                {
+                    Console.Write(board[x,y]);
+                }   
+                Console.WriteLine();
+            }
+        }
+        static List<Line> parseInput(string filename) {
+            List<Line> input = System.IO.File.ReadLines(filename)
+                .Select(line => new Line(
+                    (int.Parse(line.Split(" -> ")[0].Split(",")[0]),int.Parse(line.Split(" -> ")[0].Split(",")[1])), 
+                    (int.Parse(line.Split(" -> ")[1].Split(",")[0]),int.Parse(line.Split(" -> ")[1].Split(",")[1]))
+                    )).ToList();
+            
+            board = new int [input.Max(x=>Math.Max(x.start.Item1, x.end.Item1) + 1), input.Max(x=>Math.Max(x.start.Item2, x.end.Item2) + 1)];
+
+            return input;
+        }
+
+        static string Part1(List<Line> lines, bool ignoreDiagonals = true)
+        {
+            int overlapping = 0;
+            foreach(var line in lines) 
+            {
+                (int,int) slope = (line.end.Item1 - line.start.Item1, line.end.Item2 - line.start.Item2);
+                (int,int) point = line.start;
+                if(ignoreDiagonals && slope.Item1 != 0 && slope.Item2 != 0) continue; 
+
+                while (point != line.end) 
+                {
+                    board[point.Item1,point.Item2] += 1;
+                    if(board[point.Item1,point.Item2] == 2) 
+                    {
+                        overlapping++;
+                    }
+
+                    if(slope.Item1 > 0) point.Item1 += 1;
+                    else if (slope.Item1 < 0) point.Item1 -= 1;
+                    
+                    if (slope.Item2 > 0) point.Item2 += 1;
+                    else if (slope.Item2 < 0) point.Item2 -= 1;
+                }
+                board[line.end.Item1,line.end.Item2] += 1;
+                if(board[point.Item1,point.Item2] == 2) 
+                    {
+                        overlapping++;
+                    }
             }
 
-            return (boards, bingoNumbers.ToList());
-            
+            return overlapping.ToString();
         }
-
-        public static int Part1(List<BingoBoard> boards, int[] bingonumbers) 
+        static string Part2(List<Line> lines)
         {
-            (int sum, int winindex) bestResult = (0,bingonumbers.Length);
-            
-            Parallel.ForEach(boards, board =>
-            {   
-                var boardResult = board.PlayNumbers(bingonumbers);
-                if(bestResult.winindex>=boardResult.winIndex) bestResult = boardResult;
-                
-            });
-
-            return bestResult.sum * bingonumbers[bestResult.winindex];
+            return "";
         }
-        public static int Part2(List<BingoBoard> boards, int[] bingonumbers) 
-        {
-            (int sum, int winindex) bestResult = (0,0);
-            
-            Parallel.ForEach(boards, board =>
-            {   
-                var boardResult = board.PlayNumbers(bingonumbers);
-                if(bestResult.winindex<boardResult.winIndex) bestResult = boardResult;
-                
-            });
-
-            return bestResult.sum * bingonumbers[bestResult.winindex];
-        }
-
+        
         static void Main(string[] args)
         {
             var input = parseInput("input.txt");
-            List<BingoBoard> boards = input.boards;
-            List<int> bingonumbers = input.bingonumbers;
 
-
-            var part = Environment.GetEnvironmentVariable("part");
-            if(part == "Part1") Console.WriteLine(Part1(boards, bingonumbers.ToArray())); else Console.WriteLine(Part2(boards, bingonumbers.ToArray()));
+            if(Environment.GetEnvironmentVariable("part") == "Part1") 
+            Console.WriteLine(Part1(input));
+            else Console.WriteLine(Part1(input, false));
         }
     } 
 }
